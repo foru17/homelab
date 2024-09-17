@@ -33,7 +33,8 @@ IP-CIDR,208.67.220.220/32,no-resolve
 # Others 域名后缀匹配
 DOMAIN-SUFFIX,shopify.com
 DOMAIN-SUFFIX,shopifysvc.com
-DOMAIN-SUFFIX,myshopify.com
+DOMAIN-SUFFIX,shopifysvc.com
+DOMAIN-SUFFIX,shopifycloud.com
 DOMAIN-SUFFIX,shopify.dev
 DOMAIN-SUFFIX,supabase.com
 DOMAIN-SUFFIX,postmarkapp.com
