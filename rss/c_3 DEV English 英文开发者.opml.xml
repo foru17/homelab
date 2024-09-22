@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml xmlns:frss="https://freshrss.org/opml" version="2.0">
+  <head>
+    <title>FreshRSS</title>
+    <dateCreated>Sun, 22 Sep 2024 12:29:47 +0800</dateCreated>
+  </head>
+  <body>
+    <outline text="DEV English 英文开发者">
+      <outline text="AddyOsmani.com" type="rss" xmlUrl="http://addyosmani.com/rss.xml" htmlUrl="https://addyosmani.com"/>
+      <outline text="Danny Guo" type="rss" xmlUrl="https://www.dannyguo.com/blog/feed.xml" htmlUrl="https://www.dannyguo.com/blog"/>
+      <outline text="Lil'Log" type="rss" xmlUrl="https://lilianweng.github.io/index.xml" htmlUrl="https://lilianweng.github.io/"/>
+      <outline text="mgx" type="rss" xmlUrl="https://mgx.me/feed/?type=rss" htmlUrl="https://mgx.me/"/>
+      <outline text="mizou" type="rss" xmlUrl="https://mizou.org/rss" htmlUrl="https://mizou.org"/>
+      <outline text="neverland" type="rss" xmlUrl="https://type.cyhsu.xyz/feed.xml" htmlUrl="https://type.cyhsu.xyz/"/>
+      <outline text="Spencer's blog" type="rss" xmlUrl="https://spencerwoo.com/feed.xml" htmlUrl="https://spencerwoo.com/blog"/>
+      <outline text="Takuya Matsuyama" type="rss" xmlUrl="https://www.devas.life/rss/" htmlUrl="https://www.devas.life/"/>
+      <outline text="Zain Rizvi" type="rss" xmlUrl="https://www.zainrizvi.io/rss/" htmlUrl="https://www.zainrizvi.io"/>
+    </outline>
+  </body>
+</opml>

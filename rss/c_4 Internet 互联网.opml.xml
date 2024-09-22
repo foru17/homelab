@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml xmlns:frss="https://freshrss.org/opml" version="2.0">
+  <head>
+    <title>FreshRSS</title>
+    <dateCreated>Sun, 22 Sep 2024 12:30:01 +0800</dateCreated>
+  </head>
+  <body>
+    <outline text="Internet 互联网">
+      <outline text="GeekPark 捕风捉影" type="rss" xmlUrl="https://www.geekpark.net/rss" htmlUrl="http://mainssl.geekpark.net/rss.rss"/>
+      <outline text="Tencent AlloyTeam" type="rss" xmlUrl="http://www.alloyteam.com/feed/" htmlUrl="http://www.alloyteam.com"/>
+      <outline text="编程随想的博客" type="rss" xmlUrl="http://feeds2.feedburner.com/programthink" htmlUrl="https://program-think.blogspot.com/"/>
+      <outline text="阮一峰的网络日志" type="rss" xmlUrl="http://feeds.feedburner.com/ruanyifeng" htmlUrl="http://www.ruanyifeng.com/blog/"/>
+    </outline>
+  </body>
+</opml>

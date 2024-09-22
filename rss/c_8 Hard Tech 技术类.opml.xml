@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml xmlns:frss="https://freshrss.org/opml" version="2.0">
+  <head>
+    <title>FreshRSS</title>
+    <dateCreated>Sun, 22 Sep 2024 12:29:56 +0800</dateCreated>
+  </head>
+  <body>
+    <outline text="Hard Tech 技术类">
+      <outline text="乱世浮生" type="rss" xmlUrl="https://atbug.com/index.xml" htmlUrl="https://atbug.com/"/>
+      <outline text="云原生实验室" type="rss" xmlUrl="https://icloudnative.io/index.xml" htmlUrl="https://icloudnative.io/"/>
+      <outline text="技术小黑屋" type="rss" xmlUrl="https://droidyue.com/atom.xml" htmlUrl="https://droidyue.com/"/>
+    </outline>
+  </body>
+</opml>

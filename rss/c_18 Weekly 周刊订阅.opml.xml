@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml xmlns:frss="https://freshrss.org/opml" version="2.0">
+  <head>
+    <title>FreshRSS</title>
+    <dateCreated>Sun, 22 Sep 2024 12:30:24 +0800</dateCreated>
+  </head>
+  <body>
+    <outline text="Weekly 周刊订阅">
+      <outline text="AI探索指南" type="rss" xmlUrl="https://rss.app/feeds/2SWv9MU0U6XUufXv.xml" htmlUrl="https://t.me/s/aigc1024"/>
+      <outline text="二丫讲梵" type="rss" xmlUrl="https://wiki.eryajf.net/rss.xml" htmlUrl="https://wiki.eryajf.net"/>
+      <outline text="即刻精选" type="rss" xmlUrl="https://rss.app/feeds/fcUMx0BS19I3c6x1.xml" htmlUrl="https://t.me/s/jike_collection"/>
+      <outline text="增长黑客通讯周刊 Archive Feed" type="rss" xmlUrl="https://us6.campaign-archive.com/feed?u=e4582460499f4aadae1a90e2b&amp;id=d2c14f8a94" htmlUrl="https://us6.campaign-archive.com/feed?u=e4582460499f4aadae1a90e2b&amp;id=d2c14f8a94"/>
+      <outline text="粥里有勺糖" type="rss" xmlUrl="https://sugarat.top/feed.rss" htmlUrl="https://sugarat.top"/>
+    </outline>
+  </body>
+</opml>

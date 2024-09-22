@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml xmlns:frss="https://freshrss.org/opml" version="2.0">
+  <head>
+    <title>FreshRSS</title>
+    <dateCreated>Sun, 22 Sep 2024 12:30:07 +0800</dateCreated>
+  </head>
+  <body>
+    <outline text="KOL 影响力">
+      <outline text="Blog.XDite.net" type="rss" xmlUrl="http://feeds.feedburner.com/xxddite" htmlUrl="http://blog.xdite.net"/>
+      <outline text="Tw93 Blog" type="rss" xmlUrl="https://tw93.fun/feed.xml" htmlUrl="https://tw93.fun"/>
+      <outline text="一天世界" type="rss" xmlUrl="https://blog.yitianshijie.net/feed/" htmlUrl="https://blog.yitianshijie.net"/>
+      <outline text="可能吧" type="rss" xmlUrl="https://feeds.feedburner.com/kenengbarss" htmlUrl="https://kenengba.com"/>
+      <outline text="土木坛子 比利时phd" type="rss" xmlUrl="https://tumutanzi.com/feed" htmlUrl="https://tumutanzi.com"/>
+      <outline text="狂人山庄 Madman Hills" type="rss" xmlUrl="https://bra.live/rss/" htmlUrl="https://bra.live/"/>
+    </outline>
+  </body>
+</opml>

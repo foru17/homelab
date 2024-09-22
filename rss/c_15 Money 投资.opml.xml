@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml xmlns:frss="https://freshrss.org/opml" version="2.0">
+  <head>
+    <title>FreshRSS</title>
+    <dateCreated>Sun, 22 Sep 2024 12:30:16 +0800</dateCreated>
+  </head>
+  <body>
+    <outline text="Money 投资">
+      <outline text="MBI Deep Dives" type="rss" xmlUrl="https://mbi-deepdives.com/feed/" htmlUrl="https://www.mbi-deepdives.com/"/>
+      <outline text="Mr.Huang Talk" type="rss" xmlUrl="https://www.mrhuangtalk.com/feed.xml" htmlUrl="https://www.mrhuangtalk.com/"/>
+      <outline text="mtlynch.io" type="rss" xmlUrl="https://mtlynch.io/index.xml" htmlUrl="https://mtlynch.io/"/>
+      <outline text="TheMarketMemo" type="rss" xmlUrl="https://lonecapital.com/feed/" htmlUrl="https://themarketmemo.com"/>
+    </outline>
+  </body>
+</opml>
