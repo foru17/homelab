@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Query
 from fastapi.responses import JSONResponse, Response
 import cv2
 import numpy as np
@@ -7,11 +7,15 @@ from datetime import datetime
 from deepface import DeepFace
 from retinaface import RetinaFace
 import io
+from typing import Optional
 
 app = FastAPI()
 
 # 创建输出目录
 OUTPUT_DIR = "/Users/luolei/Desktop"
+# 服务器端口
+SERVER_PORT = 8008
+
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
@@ -22,75 +26,115 @@ OUTER_THICKNESS = 6            # 外层边框粗细
 INNER_THICKNESS = 3            # 内层边框粗细
 
 
-def draw_detections(img, faces):
-    """在图片上绘制检测结果"""
+def draw_detections_with_info(img, faces):
+    """在图片上绘制检测结果和额外信息"""
     img_result = img.copy()
 
     for face in faces:
-        # 获取人脸框坐标
+        # 获取人脸区域
         facial_area = face['facial_area']
         x = facial_area['x']
         y = facial_area['y']
         w = facial_area['w']
         h = facial_area['h']
 
-        # 先画外层白色边框
+        # 画双层边框
         cv2.rectangle(img_result,
                       (x, y),
                       (x + w, y + h),
                       OUTER_COLOR,
                       OUTER_THICKNESS)
-
-        # 再画内层橙色边框
         cv2.rectangle(img_result,
                       (x, y),
                       (x + w, y + h),
                       INNER_COLOR,
                       INNER_THICKNESS)
 
-        # 如果有置信度分数，显示它
-        if 'score' in face:
-            confidence = face['score']
-            # 添加置信度文本
-            text = f"{confidence:.2f}"
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            font_scale = 0.7
-            text_thickness = 2
+        # 准备显示的信息
+        info_lines = []
+        if face.get('score'):
+            info_lines.append(f"Conf: {face['score']:.2f}")
+        if face.get('age'):
+            info_lines.append(f"Age: {face['age']}")
+        if face.get('gender'):
+            info_lines.append(f"Gender: {face['gender']}")
+        if face.get('dominant_emotion'):
+            info_lines.append(f"Emotion: {face['dominant_emotion']}")
 
+        # 文本显示设置
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 0.7
+        text_thickness = 2
+        line_height = 25
+        padding = 5
+
+        # 计算所有文本的总高度
+        total_height = len(info_lines) * line_height
+
+        # 确定文本起始位置（避免超出图像边界）
+        start_y = max(total_height + padding, y)
+
+        # 绘制信息
+        for i, line in enumerate(info_lines):
             # 获取文本大小
-            (text_width, text_height), baseline = cv2.getTextSize(text,
-                                                                  font,
-                                                                  font_scale,
-                                                                  text_thickness)
+            (text_width, text_height), _ = cv2.getTextSize(
+                line, font, font_scale, text_thickness)
 
-            # 绘制文本背景（使用同样的双层效果）
-            # 外层白色背景
+            # 计算文本位置
+            text_y = start_y - (i * line_height)
+
+            # 确保文本框不会超出图像边界
+            text_x = min(x, img_result.shape[1] - text_width - padding)
+
+            # 绘制文本背景（双层效果）
             cv2.rectangle(img_result,
-                          (x - 2, y - text_height - 8),
-                          (x + text_width + 8, y + 2),
+                          (text_x - padding, text_y - text_height - padding),
+                          (text_x + text_width + padding, text_y + padding),
                           OUTER_COLOR,
                           -1)
-            # 内层橙色背景
             cv2.rectangle(img_result,
-                          (x, y - text_height - 6),
-                          (x + text_width + 6, y),
+                          (text_x - padding + 2, text_y -
+                           text_height - padding + 2),
+                          (text_x + text_width + padding - 2, text_y + padding - 2),
                           INNER_COLOR,
                           -1)
 
             # 绘制文本
             cv2.putText(img_result,
-                        text,
-                        (x + 3, y - 7),
+                        line,
+                        (text_x, text_y),
                         font,
                         font_scale,
-                        (255, 255, 255),  # 白色文字
+                        (255, 255, 255),
                         text_thickness)
 
     return img_result
 
 
-@app.post("/detect/")
-async def detect(file: UploadFile = File(...)):
+def convert_to_native_types(obj):
+    """将 numpy 类型转换为 Python 原生类型"""
+    if isinstance(obj, dict):
+        return {key: convert_to_native_types(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_to_native_types(item) for item in obj]
+    elif isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    else:
+        return obj
+
+
+@app.post("/analyze")
+async def detect(
+    file: UploadFile = File(...),
+    save_render: Optional[bool] = Query(
+        default=False,
+        description="Whether to save the rendered image with face detection markers"
+    )
+):
     try:
         # 读取图片
         contents = await file.read()
@@ -108,7 +152,7 @@ async def detect(file: UploadFile = File(...)):
 
         # 转换检测结果格式
         face_list = []
-        if isinstance(faces, dict):  # 检测到人脸
+        if isinstance(faces, dict):
             for face_key in faces:
                 face_data = faces[face_key]
                 facial_area = {
@@ -117,37 +161,79 @@ async def detect(file: UploadFile = File(...)):
                     'w': int(face_data['facial_area'][2] - face_data['facial_area'][0]),
                     'h': int(face_data['facial_area'][3] - face_data['facial_area'][1])
                 }
-                face_list.append({
-                    'facial_area': facial_area,
-                    'score': float(face_data['score']) if 'score' in face_data else None
-                })
 
-        # 在图片上绘制检测结果
-        img_result = draw_detections(img, face_list)
+                face_img = img[
+                    facial_area['y']:facial_area['y']+facial_area['h'],
+                    facial_area['x']:facial_area['x']+facial_area['w']
+                ]
 
-        # 保存结果图像
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_filename = f"result_{timestamp}.jpg"
-        output_path = os.path.join(OUTPUT_DIR, output_filename)
+                try:
+                    analysis = DeepFace.analyze(
+                        face_img,
+                        actions=['age', 'gender', 'race', 'emotion'],
+                        enforce_detection=False
+                    )
 
-        success = cv2.imwrite(output_path, img_result)
-        if not success:
-            raise Exception("Failed to save the image")
+                    if isinstance(analysis, list):
+                        analysis = analysis[0]
 
-        print(f"Successfully saved result to: {output_path}")
+                    gender = "Woman" if analysis['gender']['Woman'] > 50 else "Man"
 
-        return {
+                    face_info = {
+                        'position': facial_area,
+                        'confidence': float(face_data['score']) if 'score' in face_data else None,
+                        'age': int(analysis['age']),
+                        'gender': gender,
+                        'dominant_race': str(analysis['dominant_race']),
+                        'dominant_emotion': str(analysis['dominant_emotion']),
+                        'emotion': {k: float(v) for k, v in analysis['emotion'].items()},
+                        'race': {k: float(v) for k, v in analysis['race'].items()}
+                    }
+
+                except Exception as e:
+                    print(f"Face analysis failed: {str(e)}")
+                    face_info = {
+                        'position': facial_area,
+                        'confidence': float(face_data['score']) if 'score' in face_data else None
+                    }
+
+                face_list.append(face_info)
+
+        output_path = None
+        if save_render:
+            # 准备绘制信息
+            face_info_list = []
+            for face in face_list:
+                face_info = {
+                    'facial_area': face['position'],
+                    'score': face['confidence'],
+                    'age': face.get('age'),
+                    'gender': face.get('gender'),
+                    'dominant_emotion': face.get('dominant_emotion')
+                }
+                face_info_list.append(face_info)
+
+            # 绘制标记
+            img_result = draw_detections_with_info(img, face_info_list)
+
+            # 保存带标记的图片
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_filename = f"result_{timestamp}.jpg"
+            output_path = os.path.join(OUTPUT_DIR, output_filename)
+            cv2.imwrite(output_path, img_result)
+
+        # 准备响应数据
+        response_data = {
             "status": "success",
             "faces_detected": len(face_list),
-            "faces": [
-                {
-                    "position": face['facial_area'],
-                    "confidence": face.get('score', None)
-                }
-                for face in face_list
-            ],
-            "output_file": output_path
+            "faces": convert_to_native_types(face_list),
         }
+
+        # 只在保存了渲染图片时添加文件路径
+        if output_path:
+            response_data["output_file"] = output_path
+
+        return response_data
 
     except Exception as e:
         print(f"Error occurred: {str(e)}")
@@ -160,7 +246,7 @@ async def detect(file: UploadFile = File(...)):
         )
 
 
-@app.post("/detect_and_return/")
+@app.post("/detect_and_return")
 async def detect_and_return(file: UploadFile = File(...)):
     try:
         # 读取图片
@@ -194,7 +280,7 @@ async def detect_and_return(file: UploadFile = File(...)):
                 })
 
         # 在图片上绘制检测结果
-        img_result = draw_detections(img, face_list)
+        img_result = draw_detections_with_info(img, face_list)
 
         # 将图片编码为JPEG格式
         _, img_encoded = cv2.imencode('.jpg', img_result)
@@ -221,4 +307,4 @@ async def detect_and_return(file: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8008)
+    uvicorn.run(app, host="0.0.0.0", port=SERVER_PORT)
