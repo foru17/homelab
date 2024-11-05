@@ -4,6 +4,8 @@
 
 This is a simple project to detect human faces in an image using deepface and fastapi.
 
+![](./examples/face-taged.jpg)
+
 ## Requirements
 
 - Python 3.6+
@@ -11,7 +13,7 @@ This is a simple project to detect human faces in an image using deepface and fa
 
 ## Reference
 
-- [deepface](https://github.com/serengil/deepface)
+- [DeepFace](https://github.com/serengil/deepface): A Lightweight Face Recognition and Facial Attribute Analysis (Age, Gender, Emotion and Race) Library for Python.
 
 ## Install
 
