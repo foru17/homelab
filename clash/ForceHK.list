@@ -1,0 +1,9 @@
+# ForceHK.list — 站点级出口偏好: 强制走香港出口
+# 适用场景: 站点对出口 IP 风控/封禁(美欧机房 IP 被拒、Cloudflare 盾疯狂验证等)，
+#          实测经 HK(Bage 落地)访问正常的站点收进这里。
+# 消费方: zuoluotv.ini → 🇭🇰 香港出口 / zuoluotv-friend.ini → 🇭🇰 香港节点
+# 维护: 追加一行 DOMAIN-SUFFIX 即可，无需改 ini 分组；
+#      GitHub raw 有 ~5min CDN 缓存，订阅在下一次 renew(SJC 每日 09:30 UTC 或手动)后生效。
+
+# NodeSeek 论坛 (2026-07-06: 非港出口被提示境外 IP/无法访问)
+DOMAIN-SUFFIX,nodeseek.com
