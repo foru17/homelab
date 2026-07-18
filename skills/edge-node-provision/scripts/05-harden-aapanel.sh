@@ -14,6 +14,7 @@ run "cd /www/server/panel
   echo '$SUB_PANEL.$DOMAIN_ROOT' > data/domain.conf && echo domain-bound
   echo 'CDN_PROXY=True' > config/cdn.conf && echo cdn-proxy-on
   /etc/init.d/bt restart >/dev/null 2>&1; sleep 3
-  ss -lnt | grep -q ':$AAPANEL_PORT' && echo panel-listening || echo 'WARN: panel not listening on $AAPANEL_PORT (check with: bt 14)'"
+  P=\$(cat /www/server/panel/data/port.pl | tr -d '[:space:]')
+  ss -lnt | grep -q \":\$P\" && echo \"panel-listening-\$P\" || echo 'WARN: panel not listening (check with: bt 14)'"
 echo "NOTE: reverse-proxy access at https://$SUB_PANEL.$DOMAIN_ROOT$AAPANEL_ENTRANCE (after 09-aapanel-sites)."
 echo "NOTE: direct IP:port returns 403 by design (domain binding). Restart panel with 'bt 1', never 'systemctl restart btpanel'."

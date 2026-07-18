@@ -27,8 +27,9 @@ Turn a bare Debian/Ubuntu VPS into a fully managed edge node with one guided wor
 
 Fill a working copy of `scripts/config.env.example` → `config.env` (git-ignored by you). Collect these before touching the box:
 
-- `SERVER_IP` / `SERVER_IPV6` — the new VPS public addresses
-- `SSH_KEY` — path to the private key the provider gave you (or your own)
+- `SERVER_IP` / `SERVER_IPV6` — the new VPS public addresses (amd64 or arm64)
+- `SSH_USER` / `SSH_KEY` — `root` or a sudo user (scripts escalate via `sudo`), and the private key
+- `TZ` — server timezone (default `UTC`)
 - `DOMAIN_ROOT` — the sub-zone this node owns, e.g. `nodeA.example.com` (you get `*.nodeA.example.com`)
 - `CF_API_TOKEN` — Cloudflare token with **Zone:DNS:Edit** on the parent zone (`example.com`)
 - `CF_ZONE_ID` — the parent zone id (script can look it up from the token)

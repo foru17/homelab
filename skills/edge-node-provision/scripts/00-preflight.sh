@@ -5,12 +5,12 @@
 echo "== SSH + specs =="
 run 'hostname; . /etc/os-release; echo "$PRETTY_NAME"; nproc; free -m | awk "/Mem/{print \$2\"MB\"}"; df -h / | tail -1'
 
-echo "== timezone + base packages =="
-run 'timedatectl set-timezone Asia/Shanghai 2>/dev/null || true
+echo "== timezone (${TZ:-UTC}) + base packages =="
+run "timedatectl set-timezone '${TZ:-UTC}' 2>/dev/null || true
      export DEBIAN_FRONTEND=noninteractive
      apt-get update -qq
      apt-get install -y -qq curl wget gnupg ufw ca-certificates >/dev/null
-     echo base-packages-ok'
+     echo base-packages-ok"
 
 # Authorize YOUR public key for passwordless login (edit path if needed).
 MYPUB="$(cat "$HOME/.ssh/id_ed25519.pub" 2>/dev/null || cat "$HOME/.ssh/id_rsa.pub" 2>/dev/null || true)"

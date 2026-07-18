@@ -29,7 +29,9 @@ run "cat > /tmp/_tc.json <<JSON
    {\"tag\":\"ow\",\"protocol\":\"vmess\",\"settings\":{\"vnext\":[{\"address\":\"$COVER\",\"port\":443,\"users\":[{\"id\":\"$XUI_UUID\",\"security\":\"auto\"}]}]},\"streamSettings\":{\"network\":\"ws\",\"security\":\"tls\",\"tlsSettings\":{\"serverName\":\"$COVER\"},\"wsSettings\":{\"path\":\"$WS_PATH_WARP\",\"headers\":{\"Host\":\"$COVER\"}}}}],
   \"routing\":{\"rules\":[{\"type\":\"field\",\"inboundTag\":[\"a\"],\"outboundTag\":\"od\"},{\"type\":\"field\",\"inboundTag\":[\"b\"],\"outboundTag\":\"ow\"}]} }
 JSON
-cd /usr/local/x-ui/bin && ./xray-linux-amd64 -c /tmp/_tc.json >/tmp/_tc.log 2>&1 &
+cd /usr/local/x-ui/bin
+XRAY=\$(ls xray-linux-* 2>/dev/null | head -1); [ -n \"\$XRAY\" ] || XRAY=\$(ls xray* 2>/dev/null | head -1)
+./\$XRAY -c /tmp/_tc.json >/tmp/_tc.log 2>&1 &
 XPID=\$!; sleep 4
 echo -n 'direct egress: '; curl -s -x socks5h://127.0.0.1:10801 --max-time 12 https://1.1.1.1/cdn-cgi/trace | grep -E 'ip=|warp=' | tr '\n' ' '; echo
 echo -n 'WARP egress:   '; curl -s -x socks5h://127.0.0.1:10802 --max-time 12 https://1.1.1.1/cdn-cgi/trace | grep -E 'ip=|warp=' | tr '\n' ' '; echo

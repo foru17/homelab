@@ -40,9 +40,11 @@ python3 02-cf-dns.py
 
 ## Requirements
 
-- Target: Debian 12/13 or Ubuntu 22.04+ VPS, root/sudo SSH.
+- Target: Debian 12/13 or Ubuntu 22.04+ VPS, **amd64 or arm64**. Log in as **root or a sudo user** (scripts escalate via `sudo` automatically when `SSH_USER` isn't root).
 - A domain in **Cloudflare** + an API token with `Zone:DNS:Edit`.
 - Local: `bash`, `python3`, `ssh/scp`.
+
+Notes: the aaPanel port is read from the box (the installer randomizes it — leave `AAPANEL_PORT` empty). Set `TZ` to your preferred server timezone (default `UTC`).
 
 ## What it is NOT
 
