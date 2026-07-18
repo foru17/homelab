@@ -14,8 +14,8 @@ Turn a bare Debian/Ubuntu VPS into a fully managed edge node with one guided wor
 | Panel | aaPanel International (7.x) + nginx | `<SUB_PANEL>.<root>` reverse-proxied, secret-path entrance, hardened |
 | Proxy | 3x-ui (Xray) | `<SUB_XUI>.<root>` panel; two inbounds behind nginx (a direct cover path + a WARP cover path) |
 | Clean exit | cloudflare-warp (proxy mode) | the WARP-path inbound egresses through Cloudflare WARP |
-| TLS | acme.sh DNS-01 (Cloudflare) | wildcard `*.<root>` cert, auto-renew + reload |
-| DNS | Cloudflare API | `<root>` + `*.<root>` A/AAAA (DNS-only) |
+| TLS | acme.sh DNS-01 (any provider) | wildcard `*.<root>` cert, auto-renew + reload |
+| DNS | Cloudflare API (or your provider, by hand) | `<root>` + `*.<root>` A/AAAA (DNS-only) |
 | Cover | nginx vhosts | landing page + node cover + default-server `444` |
 | Watchdog | systemd timer | WARP proxy self-heal every 60s |
 | Monitoring | Nezha + Komari agents (optional) | node appears on your panels |
@@ -31,8 +31,8 @@ Fill a working copy of `scripts/config.env.example` → `config.env` (git-ignore
 - `SSH_USER` / `SSH_KEY` — `root` or a sudo user (scripts escalate via `sudo`), and the private key
 - `TZ` — server timezone (default `UTC`)
 - `DOMAIN_ROOT` — the sub-zone this node owns, e.g. `nodeA.example.com` (you get `*.nodeA.example.com`)
-- `CF_API_TOKEN` — Cloudflare token with **Zone:DNS:Edit** on the parent zone (`example.com`)
-- `CF_ZONE_ID` — the parent zone id (script can look it up from the token)
+- `ACME_DNS_PLUGIN` + creds — DNS provider for the wildcard cert. Default `dns_cf` (Cloudflare). Any acme.sh-supported provider works (DNSPod/Aliyun/Route53/GoDaddy/…) — set the plugin + its env vars (`references/dns-records.md`).
+- `CF_API_TOKEN` / `CF_ZONE_ID` — Cloudflare only: token with **Zone:DNS:Edit** (enables the turnkey A/AAAA record script). Non-CF users create the A/AAAA records themselves.
 - `SUB_PANEL` / `SUB_XUI` / `SUB_COVER` — the subdomain labels for the three planes. **If your zone is public, choose non-obvious labels** — don't reuse a guessable convention or people can enumerate your control planes from DNS.
 - `AAPANEL_USER` / `AAPANEL_ENTRANCE` — desired panel username + secret entrance path (e.g. `/somesecret`)
 - `XUI_USER` / `XUI_PATH` — 3x-ui username + webBasePath (e.g. `/somesecret/`)
@@ -49,11 +49,12 @@ scripts/00-preflight.sh          # confirms SSH, records specs, sets timezone, i
 ```
 Also drop **your** public key into the box's `~/.ssh/authorized_keys` for passwordless login, and (optional) add an entry to your SSH shortcut/config.
 
-### 1. Cloudflare wildcard DNS
+### 1. Wildcard DNS records
 ```bash
-python3 scripts/02-cf-dns.py     # upserts <root> + *.<root> A/AAAA -> SERVER_IP/IPV6 (proxied=false)
+python3 scripts/02-cf-dns.py     # Cloudflare: upserts <root> + *.<root> A/AAAA -> SERVER_IP/IPV6 (proxied=false)
 ```
-Run it wherever the CF token lives (your laptop or a designated host); the token never needs to touch the VPS.
+Cloudflare users run the script (token stays off the VPS). **Non-Cloudflare users** create the same
+four records by hand — see `references/dns-records.md` (two names, A + AAAA, DNS-only/unproxied).
 
 ### 2. Wildcard TLS cert (acme.sh DNS-01)
 ```bash
@@ -112,9 +113,15 @@ With `DOMAIN_ROOT=nodeA.example.com` and the **example** labels `SUB_COVER=edge`
 
 > The labels above are just examples. **Never publish the real labels you pick** — on a public zone they are the map to your control planes.
 
-## Read this before you start
+## References
 
-`references/pitfalls.md` — the non-obvious failures (aaPanel service model, anti-scan fake 404, new-schema 3x-ui client tables, WARP keyring/gnupg, nginx http2 syntax, etc.). Skipping it costs hours.
+- `references/pitfalls.md` — **read first.** The non-obvious failures (aaPanel service model, anti-scan fake 404, new-schema 3x-ui client tables, WARP keyring/gnupg, nginx http2 syntax, etc.). Skipping it costs hours.
+- `references/dns-records.md` — the exact records to create, and how to use a non-Cloudflare DNS provider.
+- `references/centralized-certs.md` — sign wildcards on one host and push to a fleet.
+
+## Works with any agent
+
+The workflow is plain bash/python — drive it with Claude Code (`SKILL.md`), Codex/others (`AGENTS.md`), or by hand (`README.md`). Nothing here is model-specific.
 
 ## Privacy / safety notes
 

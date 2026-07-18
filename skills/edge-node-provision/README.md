@@ -1,26 +1,23 @@
 # edge-node-provision
 
-A [Claude Code](https://docs.claude.com/en/docs/claude-code) **skill** that provisions a bare Debian/Ubuntu VPS into a well-managed edge node:
+An **agent-agnostic runbook** for provisioning a bare Debian/Ubuntu VPS into a well-managed edge node. Drive it with **any** coding agent — Claude Code, Codex, Kimi, Cursor, Cline, … — or run it by hand. The AI only orchestrates ordered, plain bash/python steps; nothing is model-specific.
 
-**aaPanel (International) + nginx · 3x-ui (Xray) with a direct inbound + a Cloudflare-WARP clean-exit inbound · wildcard TLS (acme.sh DNS-01) · Cloudflare wildcard DNS · a WARP self-heal watchdog · optional Nezha/Komari monitoring · passwordless SSH.**
+**aaPanel (International) + nginx · 3x-ui (Xray) with a direct inbound + a Cloudflare-WARP clean-exit inbound · wildcard TLS (acme.sh DNS-01, any DNS provider) · wildcard DNS · a WARP self-heal watchdog · optional Nezha/Komari monitoring · passwordless SSH.**
 
 It encodes a real, repeatable deployment plus every non-obvious pitfall (`references/pitfalls.md`) so the next node takes minutes, not an afternoon.
 
-## Install
+## Use it with your agent
 
-Copy the skill into your Claude Code skills directory:
+- **Any agent / human** — the source of truth is the ordered steps in `SKILL.md` (or the one-liner block below). Point the agent at this folder and say *"provision this VPS as an edge node following SKILL.md."*
+- **Claude Code** — copy into a skills dir; it auto-loads `SKILL.md`:
+  ```bash
+  cp -r edge-node-provision ~/.claude/skills/            # user-level
+  # or  cp -r edge-node-provision <project>/.claude/skills/
+  ```
+- **Codex / agents that read `AGENTS.md`** — `AGENTS.md` in this folder points them at the same workflow. Just open the folder in the agent.
+- **Kimi / Cursor / Cline / others** — open this folder and tell the agent to follow `SKILL.md`. The scripts are ordinary; no plugin format needed.
 
-```bash
-# user-level (all projects)
-cp -r skills/edge-node-provision ~/.claude/skills/
-
-# or project-level
-cp -r skills/edge-node-provision <your-project>/.claude/skills/
-```
-
-Then in Claude Code just say something like *“I bought a new VPS, provision it as an edge node”* and the skill guides the run. Or run the scripts directly (see `SKILL.md` → Workflow).
-
-## Use standalone (no Claude Code)
+## Run the steps (any agent, or by hand)
 
 Everything is plain bash/python:
 
