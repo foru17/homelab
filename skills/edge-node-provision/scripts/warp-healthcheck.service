@@ -1,0 +1,8 @@
+[Unit]
+Description=Check Cloudflare WARP proxy health and recover if needed
+After=network-online.target warp-svc.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/warp-healthcheck.sh

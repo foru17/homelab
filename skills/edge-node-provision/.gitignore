@@ -1,0 +1,4 @@
+config.env
+*.pem
+*.key
+.DS_Store
