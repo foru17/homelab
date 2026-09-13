@@ -12,6 +12,26 @@ DOMAIN-SUFFIX,hk
 # 中国移动香港 (omniapi.hk.chinamobile.com 等; 2026-09-13 实测 WARP 出口 TLS 被拒)
 DOMAIN-SUFFIX,hk.chinamobile.com
 
+# ===== 香港本地品牌 (非 .hk 域名; 多数挂 Cloudflare/Akamai/Google, IP 不在 HK, GEOIP,HK 兜不住) =====
+# 2026-09-13 实测: 下列站原被 loyalsoldier_proxy 或 MATCH 送到美国 WARP
+# 电讯
+DOMAIN-SUFFIX,pccw.com
+DOMAIN-SUFFIX,hkt.com
+DOMAIN-SUFFIX,smartone.com
+DOMAIN-SUFFIX,hkcsl.com
+DOMAIN-SUFFIX,hkbn.net
+# 媒体 / 流媒体 (TVB / myTV SUPER 有香港地区限制)
+DOMAIN-SUFFIX,tvb.com
+DOMAIN-SUFFIX,mytvsuper.com
+DOMAIN-SUFFIX,hk01.com
+DOMAIN-SUFFIX,scmp.com
+# 出行 / 生活
+DOMAIN-SUFFIX,cathaypacific.com
+DOMAIN-SUFFIX,hongkongairport.com
+DOMAIN-SUFFIX,hkjc.com
+DOMAIN-SUFFIX,openrice.com
+DOMAIN-SUFFIX,hktvmall.com
+
 # ===== 偏好香港 (无地区限制、走香港更快的站点, 在此追加) =====
 
 # ===== HSBC_HK (LingJingMaster) =====
