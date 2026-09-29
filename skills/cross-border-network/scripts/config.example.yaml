@@ -1,0 +1,22 @@
+# Temporary mihomo config for line-bench.sh. Copy to /tmp/lc/config.yaml, fill in YOUR nodes.
+# Keep it in RAM (/tmp, /dev/shm) and delete it after the run; it contains credentials.
+log-level: warning
+mode: rule
+ipv6: true
+proxies:
+  - {name: line-a, type: vmess, server: <SERVER_A>, port: <PORT_A>, uuid: <UUID_A>, alterId: 0, cipher: auto, tls: true, network: ws, ws-opts: {path: <PATH_A>}}
+  - {name: line-b, type: ss, server: <SERVER_B>, port: <PORT_B>, cipher: 2022-blake3-aes-128-gcm, password: <PSK_B>}
+listeners:
+  - {name: l0, type: mixed, port: 28901, listen: 127.0.0.1, proxy: line-a}
+  - {name: l1, type: mixed, port: 28902, listen: 127.0.0.1, proxy: line-b}
+rules:
+  - MATCH,DIRECT
+# Resolve node servers with a real resolver: on an OpenClash router the system resolver returns fake-ip,
+# which the router's own OpenClash would intercept again (double proxy, wrong numbers).
+dns:
+  enable: true
+  ipv6: true
+  enhanced-mode: redir-host
+  listen: 127.0.0.1:28953
+  default-nameserver: [223.5.5.5, 119.29.29.29]
+  nameserver: [223.5.5.5, 119.29.29.29]
