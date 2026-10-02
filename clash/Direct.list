@@ -588,3 +588,16 @@ DOMAIN-SUFFIX,zhimg.com
 DOMAIN-SUFFIX,zhipin.com
 DOMAIN-SUFFIX,zhongsou.com
 DOMAIN-SUFFIX,zhuihd.com
+
+# 国内 AI 服务（2026-10-02：ACL4SSR ChinaDomain 自 2025-12 未更新，这批漏判后靠 GEOIP,CN 兜底需先解析；均实测国内 IP）
+# 注意：海外版 minimax.io / kimi 海外站不在此列
+DOMAIN-SUFFIX,deepseek.com
+DOMAIN-SUFFIX,kimi.com
+DOMAIN-SUFFIX,moonshot.cn
+DOMAIN-SUFFIX,minimaxi.com
+DOMAIN-SUFFIX,stepfun.com
+DOMAIN-SUFFIX,bigmodel.cn
+DOMAIN-SUFFIX,zhipuai.cn
+DOMAIN-SUFFIX,doubao.com
+DOMAIN-SUFFIX,volces.com
+DOMAIN-SUFFIX,volcengine.com
