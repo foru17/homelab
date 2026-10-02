@@ -1,0 +1,32 @@
+# BlizzardExtra.list — 暴雪战网补充规则（上游 blackmatrix7 Blizzard 规则集的缺口）
+# 背景(2026-10-02): 东莞家里 Battle.net 更新卡「初始化中」、握手慢。网关 /connections 实测同一会话被拆到三个出口:
+#   kr.version.battle.net / level3.blizzard.com → 游戏平台(HK) ✅
+#   韩服 CDN blizzard.gcdn.cloudn.co.kr、暴雪自有 IP 直连 137.221.x:443 → 漏网之鱼(US LAX WARP，韩国 CDN 绕洛杉矶)
+#   forge / blzprofile.akamaized.net → 国外流量(US SJC WARP)
+# 消费方: DG / SZ 网关 rule-provider blizzard_extra → 游戏平台（放在 RULE-SET,blizzard 之后）
+# 战网 RPC 1119 端口落在 GCP 通用段(34.64.x)，无法按 IP 收，网关侧另加 DST-PORT,1119（Surge 语法不同，不放本清单）
+# 维护: 追加域名/网段即可; 网段来源 = RADB origin AS57976 (Blizzard Entertainment) 汇总
+
+# 韩服 / 区域 CDN
+DOMAIN-SUFFIX,cloudn.co.kr
+DOMAIN-SUFFIX,blzddist2-a.akamaihd.net
+DOMAIN-SUFFIX,blzddist3-a.akamaihd.net
+# 战网客户端资源（Akamai）
+DOMAIN,forge.akamaized.net
+DOMAIN-SUFFIX,blzprofile.akamaized.net
+DOMAIN-SUFFIX,blzmedia-a.akamaized.net
+DOMAIN-SUFFIX,bnetcmsus-a.akamaized.net
+
+# AS57976 Blizzard Entertainment（客户端会不带域名直连这些 IP）
+IP-CIDR,5.42.160.0/19,no-resolve
+IP-CIDR,24.105.0.0/18,no-resolve
+IP-CIDR,37.244.0.0/18,no-resolve
+IP-CIDR,59.153.40.0/22,no-resolve
+IP-CIDR,103.4.114.0/23,no-resolve
+IP-CIDR,103.198.32.0/23,no-resolve
+IP-CIDR,110.45.208.0/24,no-resolve
+IP-CIDR,137.221.64.0/18,no-resolve
+IP-CIDR,185.60.112.0/22,no-resolve
+IP-CIDR,198.74.32.0/21,no-resolve
+IP-CIDR,198.74.40.0/23,no-resolve
+IP-CIDR,202.9.66.0/23,no-resolve
